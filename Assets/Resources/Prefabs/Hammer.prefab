@@ -24,9 +24,10 @@ GameObject:
   - component: {fileID: 65114897577973436}
   - component: {fileID: 54831279546063768}
   - component: {fileID: 65006121214281846}
+  - component: {fileID: 114600407305839538}
   m_Layer: 0
   m_Name: Hammer
-  m_TagString: Untagged
+  m_TagString: Equipment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1580437144527308}
   m_LocalRotation: {x: -0.15117893, y: 0.010969224, z: 0.67825854, w: 0.71902025}
-  m_LocalPosition: {x: -0.55199754, y: 2.8479877, z: 0.43693334}
+  m_LocalPosition: {x: 1.614, y: 2.8479877, z: 1.514}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
@@ -125,3 +126,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0067875125, y: 0.017528974, z: 0.03339169}
   m_Center: {x: -1.7206783e-10, y: 0.0032992181, z: 0.0024900325}
+--- !u!114 &114600407305839538
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1580437144527308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ff824537011d745ac2ddc984931340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FocusArrow: {fileID: 0}
+  Etype: 0

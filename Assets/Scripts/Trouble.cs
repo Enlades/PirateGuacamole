@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
+// This class is used for minigames that are generated for player
+// The progress of the minigame, how hard it is, some shit more in future !!
 [Serializable]
 public class Trouble {
     // Progress value
@@ -16,7 +18,7 @@ public class Trouble {
         Level = p_Level;
     }
 
-    // Deal with it !
+    // Dew it !
     public void Deal(Action p_CallBack) {
         Progress += Time.deltaTime / Level * 10;
 
