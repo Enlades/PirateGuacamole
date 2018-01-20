@@ -1,36 +1,74 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class SeaController : MonoBehaviour {
+    [Header("Sea Parameters")]
+    public int XDimension;
+    public int YDimension;
+    public float Gap;
 
-    // Random distance range for vertices
-    public Vector2 Range = new Vector2(0.1f, 1);
-    // Speed of movement
-    public float Speed = 1;
+    [Header("Wave Parameters")]
+    public float Speed;
+    public float Period;
+    public float WaveSize;
+    public float WrinkleFrequency;
+    public float WrinkleSize;
 
-    // Random generated number for pingpong
-    private float[] _randomTimes;
+    private Vector3[] _vertices;
+    private Vector3[] _verticesCur;
     // Mesh instance
     private Mesh _seaMesh;
 
     private void Start() {
-        _seaMesh = GetComponent<MeshFilter>().mesh;
+        _seaMesh = GenerateMesh(XDimension, YDimension, Gap);
+        GetComponent<MeshFilter>().sharedMesh = _seaMesh;
+        _vertices = _seaMesh.vertices;
+        _verticesCur = _vertices.ToArray();
+    }
 
-        _randomTimes = new float[_seaMesh.vertices.Length];
+    private static Mesh GenerateMesh(int dimX, int dimY, float gap)
+    {
+        var mesh =  new Mesh();
+        var vertices = new Vector3[dimX * dimY * 6];
+        var triangles = new int[vertices.Length];
+        var ind = 0;
+        for (var y = 0; y < dimY; y++) {
+            for (var x = 0; x < dimX; x++) {
+                var pos = new Vector3(x - dimX / 2f, 0, y - dimY / 2f);
 
-        for (int i = 0; i < _seaMesh.vertices.Length; i++) {
-            _randomTimes[i] = Random.Range(Range.x, Range.y);
+                //Triangle 1
+                vertices[ind] = pos * gap;
+                vertices[ind + 1] = (pos + Vector3.forward) * gap;
+                vertices[ind + 2] = (pos + Vector3.right) * gap;
+                triangles[ind] = ind;
+                triangles[ind + 1] = ind + 1;
+                triangles[ind + 2] = ind + 2;
+                ind += 3;
+
+                //Triangle 2
+                vertices[ind] = (pos + Vector3.forward) * gap;
+                vertices[ind + 1] = (pos + Vector3.right + Vector3.forward) * gap;
+                vertices[ind + 2] = (pos + Vector3.right) * gap;
+                triangles[ind] = ind;
+                triangles[ind + 1] = ind + 1;
+                triangles[ind + 2] = ind + 2;
+                ind += 3;
+            }
         }
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
+        return mesh;
     }
 
     private void Update() {
-        Vector3[] vertices = _seaMesh.vertices;
-
-        // Pingpong vertices with the values from random array.
-        for (int i = 0; i < _seaMesh.vertices.Length; i++) {
-            vertices[i].z = 1 * Mathf.PingPong(Time.time * Speed, _randomTimes[i]);
+        
+        for (var i = 0; i < _vertices.Length; i++) {
+            _verticesCur[i].y = (Mathf.Sin(_vertices[i].z * Period + Time.time * Speed) + Mathf.Sin(_vertices[i].z * Period * 0.4f + Time.time * Speed) + Mathf.PerlinNoise(_vertices[i].x + Time.time, _vertices[i].z + Time.time)) * WaveSize;
+            _verticesCur[i].z = _vertices[i].z + Mathf.Sin((_vertices[i].x + Time.time * Gap) * WrinkleFrequency) * WrinkleSize + Mathf.Sin((_vertices[i].z * Mathf.Sin(Time.time) +_vertices[i].x * Mathf.Cos(Time.time)) * Period * 0.4f + Time.time * Speed);
         }
 
-        _seaMesh.vertices = vertices;
+        _seaMesh.vertices = _verticesCur;
         // Makes the lighting better :D
         _seaMesh.RecalculateNormals();
     }
