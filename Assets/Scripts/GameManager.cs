@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -15,6 +14,11 @@ public class GameManager : MonoBehaviour {
         FocusArrowPrefab = Resources.Load("Prefabs/FocusArrow")as GameObject;
         CannonBallPrefab = Resources.Load("Prefabs/CannonBall")as GameObject;
         CannonBallSmokePSPrefab = Resources.Load("Prefabs/CannonBallSmokePS")as GameObject;
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     // Why not right ?

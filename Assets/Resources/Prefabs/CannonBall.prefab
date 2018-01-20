@@ -22,9 +22,12 @@ GameObject:
   - component: {fileID: 33856966538509518}
   - component: {fileID: 23666214086692910}
   - component: {fileID: 54772298798150136}
+  - component: {fileID: 65540402974027676}
+  - component: {fileID: 114325686606979374}
+  - component: {fileID: 135131675845445664}
   m_Layer: 0
   m_Name: CannonBall
-  m_TagString: Untagged
+  m_TagString: Equipment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1300870065676908}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0.8214, y: 3.007, z: 3.916}
+  m_LocalPosition: {x: 1.0355583, y: 3.074, z: 3.184476}
   m_LocalScale: {x: 8.075735, y: 8.075735, z: 8.075735}
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,3 +101,40 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &65540402974027676
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1300870065676908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.019498559, y: 0.019009687, z: 0.019999994}
+  m_Center: {x: 9.313225e-10, y: 0.0004951543, z: 0}
+--- !u!114 &114325686606979374
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1300870065676908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ff824537011d745ac2ddc984931340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FocusArrow: {fileID: 0}
+  Etype: 2
+--- !u!135 &135131675845445664
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1300870065676908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.009999997
+  m_Center: {x: 9.313225e-10, y: 0.0004951543, z: 0}

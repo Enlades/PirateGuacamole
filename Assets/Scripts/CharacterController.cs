@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
 
-public class CharacterController : MonoBehaviour {
+public class CharacterController : MonoBehaviour, IRockable {
 
     // Make it 1, 2 ,3 4 from editor
     public int PlayerID;
@@ -30,7 +29,11 @@ public class CharacterController : MonoBehaviour {
         }
     }
     private Vector3 rightVector {
-        get { return _mainCam.transform.right; }
+        get { 
+            Vector3 result = _mainCam.transform.right;
+            result.y = 0;
+            return result;
+        }
     }
 
     // Render me like your french girls
@@ -126,7 +129,9 @@ public class CharacterController : MonoBehaviour {
 	    }
 
         #endregion
-    }
+
+	    Rock();
+	}
 
     // Callback function for Trigger.
     private void ClearTrigger() {
@@ -138,6 +143,18 @@ public class CharacterController : MonoBehaviour {
     private void OnTriggerEnter(Collider col) {
         if (col.CompareTag("Equipment")) {
             col.GetComponent<IFocusable>().ActivateFocus();
+        }else if (col.CompareTag("TriggerArea")) { // This part checks if the player is entering the trigger area while holding the primary button.
+            if (Input.GetButton("P" + PlayerID + "_Primary")) {
+                if (TriggerEvent != null) {
+                    ProgressBar.SetActive(true);
+
+                    ProgressBar.transform.LookAt(Camera.main.transform.position);
+                    Vector3 scale = ProgressBar.transform.GetChild(0).localScale;
+                    scale.x = 0;
+
+                    ProgressBar.transform.GetChild(0).localScale = scale;
+                }
+            }
         }
     }
 
@@ -168,5 +185,15 @@ public class CharacterController : MonoBehaviour {
         if (col.CompareTag("Equipment")) {
             col.GetComponent<IFocusable>().DeactivateFocus();
         }
+    }
+
+    public void Rock() {
+        Vector3 cameraRightVector = Camera.main.transform.right;
+        cameraRightVector.y = 0;
+
+        transform.Translate(cameraRightVector * Time.deltaTime
+                                              * (Camera.main.transform.localEulerAngles.z > 180
+                                                  ? 360 - Camera.main.transform.localEulerAngles.z
+                                                  : Camera.main.transform.localEulerAngles.z) / 50, Space.World);
     }
 }

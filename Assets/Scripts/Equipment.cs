@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Equipment : MonoBehaviour, IFocusable, IPickable {
+public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
 
     // To be used in future
     public enum EquipmentType {
         Hammer,
-        FireStick
+        FireStick,
+        CannonBall
     };
 
     // Reference to focus arrow
@@ -19,6 +18,10 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable {
     private void Awake() {
         FocusArrow = Instantiate(GameManager.FocusArrowPrefab, transform.position, Quaternion.identity);
         FocusArrow.SetActive(false);
+    }
+
+    private void Update() {
+        Rock();
     }
 
     // Makes the Focus Arrow visible
@@ -45,7 +48,15 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable {
         transform.position = p_Owner.transform.position + Vector3.up / 2;
         transform.SetParent(p_Owner.transform);
         GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Collider>().enabled = false;
+
+        // Since there is one collider for collision and the other for trigger
+        // We need to disable both so that the equipment won't be triggered again.
+        var colliders = GetComponents<Collider>();
+        for (int i = 0; i < colliders.Length; i++) {
+            colliders[i].enabled = false;
+        }
+
+        DeactivateFocus();
 
         return this;
     }
@@ -56,6 +67,20 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable {
         transform.SetParent(null);
 
         GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Collider>().enabled = true;
+
+        var colliders = GetComponents<Collider>();
+        for (int i = 0; i < colliders.Length; i++) {
+            colliders[i].enabled = true;
+        }
+    }
+
+    public void Rock() {
+        Vector3 cameraRightVector = Camera.main.transform.right;
+        cameraRightVector.y = 0;
+
+        transform.Translate(cameraRightVector * Time.deltaTime
+                                              * (Camera.main.transform.localEulerAngles.z > 180
+                                                  ? 360 - Camera.main.transform.localEulerAngles.z
+                                                  : Camera.main.transform.localEulerAngles.z) / 50, Space.World);
     }
 }
