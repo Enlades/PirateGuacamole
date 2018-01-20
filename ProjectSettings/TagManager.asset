@@ -8,6 +8,7 @@ TagManager:
   - TriggerArea
   - Equipment
   - Station
+  - Usable
   layers:
   - Default
   - TransparentFX

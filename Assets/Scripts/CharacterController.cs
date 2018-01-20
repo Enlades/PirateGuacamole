@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class CharacterController : MonoBehaviour {
 
@@ -154,6 +155,10 @@ public class CharacterController : MonoBehaviour {
                 CurrentStation = col.GetComponent<Station>().Man(this);
 
                 transform.LookAt(CurrentStation.transform.GetChild(1).position);
+            }
+        }else if (col.CompareTag("Usable")) {
+            if (Input.GetButtonDown("P" + PlayerID + "_Primary")) {
+                col.GetComponent<IUsable>().Use();
             }
         }
     }
