@@ -4,10 +4,13 @@ using System;
 
 public class TriggerAreaController : MonoBehaviour{
 
+    // TRIGGERED !!!
     public bool Triggered = false;
 
+    // Trouble is the class that's holding the information for the mini-game.
     public Trouble ActiveTrouble = null;
 
+    // Not used yet, maybe some time.
     private bool _generatingTrouble = false;
 
     private void Awake() {
@@ -16,16 +19,19 @@ public class TriggerAreaController : MonoBehaviour{
         StartCoroutine(GenereateTrouble());
     }
 
+    // Function is called from player while the player holds the primary button.
     private Trouble ProgressTrigger(Action p_Callback) {
         Color transGreen = Color.green;
         transGreen.a = 0.2f;
         GetComponent<MeshRenderer>().material.color = transGreen;
 
+        // Progress is made in Trouble class.
         ActiveTrouble.Deal(p_Callback);
 
         return ActiveTrouble;
     }
 
+    // Simple function for debug purposes, this function is called when player exits the trigger.
     private void EnableTrigger() {
         Color transRed = Color.red;
         transRed.a = 0.2f;
@@ -35,6 +41,7 @@ public class TriggerAreaController : MonoBehaviour{
         GetComponent<Collider>().enabled = true;
     }
 
+    // This function is called when the trouble is dealt with.
     private void DisableTrigger() {
         GetComponent<Renderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
@@ -57,6 +64,9 @@ public class TriggerAreaController : MonoBehaviour{
         _generatingTrouble = false;
     }
 
+    // Enter me senpai
+    // What ?
+    // What ?
     private void OnTriggerEnter(Collider col) {
         if (!Triggered) {
             if (col.CompareTag("Player")) {
@@ -68,7 +78,9 @@ public class TriggerAreaController : MonoBehaviour{
             }
         }
     }
-
+    
+    // RETREAAT !
+    // HURRY !
     private void OnTriggerExit(Collider col) {
         if (!Triggered) {
             if (col.CompareTag("Player")) {

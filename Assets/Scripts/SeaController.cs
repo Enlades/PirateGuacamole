@@ -2,38 +2,30 @@
 
 public class SeaController : MonoBehaviour {
 
-    public Vector2 range = new Vector2(0.1f, 1);
-    public float speed = 1;
-    float[] randomTimes;
-    private Mesh seaMesh;
+    public Vector2 Range = new Vector2(0.1f, 1);
+    public float Speed = 1;
+
+    private float[] _randomTimes;
+    private Mesh _seaMesh;
 
     private void Start() {
-        seaMesh = GetComponent<MeshFilter>().mesh;
-        int i = 0;
-        randomTimes = new float[seaMesh.vertices.Length];
+        _seaMesh = GetComponent<MeshFilter>().mesh;
 
-        //Color[] colors = new Color[mesh.vertices.Length];
+        _randomTimes = new float[_seaMesh.vertices.Length];
 
-        while (i < seaMesh.vertices.Length) {
-            randomTimes[i] = Random.Range(range.x, range.y);
-            //colors[i] = new Color(Random.Range(0f, 0.2f), Random.Range(0f, 0.2f), Random.Range(0.9f, 1f));
-
-            i++;
+        for (int i = 0; i < _seaMesh.vertices.Length; i++) {
+            _randomTimes[i] = Random.Range(Range.x, Range.y);
         }
-
-        //mesh.colors = colors;
     }
 
     private void Update() {
-        Vector3[] vertices = seaMesh.vertices;
-        Vector3[] normals = seaMesh.normals;
+        Vector3[] vertices = _seaMesh.vertices;
 
-        int i = 0;
-        while (i < vertices.Length) {
-            vertices[i].z = 1 * Mathf.PingPong(Time.time * speed, randomTimes[i]);
-            i++;
+        for (int i = 0; i < _seaMesh.vertices.Length; i++) {
+            vertices[i].z = 1 * Mathf.PingPong(Time.time * Speed, _randomTimes[i]);
         }
-        seaMesh.vertices = vertices;
-        seaMesh.RecalculateNormals();
+
+        _seaMesh.vertices = vertices;
+        _seaMesh.RecalculateNormals();
     }
 }
