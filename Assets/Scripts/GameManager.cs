@@ -3,7 +3,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    public static float WaterLevel;
+    public static float WaterLevel
+    {
+        get { return _waterLevel; }
+        set { _waterLevel = Mathf.Clamp01(value); }
+    }
+
     // Prefab for FocusArrow, comment for the sake of comment
     public static GameObject FocusArrowPrefab;
     // Prefab for CannonBall
@@ -14,6 +19,7 @@ public class GameManager : MonoBehaviour {
     public static GameObject PlankPrefab;
 
     public static GameObject BrokenDeckPrefab;
+    private static float _waterLevel;
 
     public ShakyFillBar WaterLevelFillBar;
 
