@@ -1,4 +1,5 @@
-﻿using Helpers;
+﻿using System.Collections;
+using Helpers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,7 +25,13 @@ public class GameManager : MonoBehaviour {
     public ShakyFillBar WaterLevelFillBar;
     public ScoreDisplay Score;
 
+    public GameObject GameOverGameObject;
+
     public static int GameLevel;
+
+    private GameObject _ship;
+    private GameObject _waterSplashes;
+    private bool _oneTimeEndGame;
 
     private float _timer;
 
@@ -37,13 +44,27 @@ public class GameManager : MonoBehaviour {
         FindObjectOfType<SquidController>().HitCallBack += () => Score.Score += 1000;
         _timer = 0f;
 
+        _ship = GameObject.Find("ShipMajor");
+        _waterSplashes = GameObject.Find("WaterSplashes");
+
+        _oneTimeEndGame = false;
+
         GameLevel = 1;
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        if (WaterLevelFillBar == null)
+            return;
+
         WaterLevelFillBar.Level = WaterLevel;
+
+        if (!_oneTimeEndGame && WaterLevel >= 1) {
+            _oneTimeEndGame = true;
+            SinkShip();
+        }
 
         GameLevel = (int)(Time.time / 5f);
 
@@ -56,9 +77,13 @@ public class GameManager : MonoBehaviour {
     }
 
     // Why not right ?
-    private void OnGUI() {
+    /*private void OnGUI() {
         GUILayout.Label("P1: W A S D :: E");
         GUILayout.Label("P2: Up Left Down Right :: Keypad Enter");
+    }So long*/
+
+    public void SinkShip() {
+        StartCoroutine(EndGame());
     }
 
     public static void SplashPlanks(Vector3 p_Position) {
@@ -72,5 +97,70 @@ public class GameManager : MonoBehaviour {
 
             Destroy(tempPlank, Random.Range(2f, 3f));
         }
+    }
+
+    private IEnumerator EndGame() {
+
+        float timer = 2f;
+
+        GameObject[] triggerAreas = GameObject.FindGameObjectsWithTag("TriggerArea");
+
+        for (int i = 0; i < triggerAreas.Length; i++) {
+            triggerAreas[i].SetActive(false);
+            triggerAreas[i].GetComponent<TriggerAreaController>().BrokenDeckPart.SetActive(false);
+        }
+
+        while (timer > 0) {
+
+            _ship.transform.Translate(Vector3.down * Time.deltaTime * 2, Space.World);
+
+            timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        TriggerAreaManager.Instance.Stop();
+
+        yield return new WaitForSeconds(2f);
+
+        _waterSplashes.SetActive(false);
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        for (int i = 0; i < players.Length; i++) {
+            players[i].SetActive(false);
+        }
+
+        GameOverGameObject.SetActive(true);
+
+        Vector3 targetPos = GameOverGameObject.transform.position;
+        targetPos.y = 2f;
+
+        timer = 1f;
+
+        while (timer > 0) {
+
+            GameOverGameObject.transform.position =
+                Vector3.Lerp(GameOverGameObject.transform.position, targetPos, 1 - timer);
+
+            timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        timer = 2f;
+
+        while (timer > 0) {
+            timer -= Time.deltaTime;
+
+            if(Input.GetMouseButtonDown(0) || Input.GetButtonDown("P1_Primary") || Input.GetButtonDown("P2_Primary"))
+                SceneManager.LoadScene(0);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        SceneManager.LoadScene(0);
     }
 }

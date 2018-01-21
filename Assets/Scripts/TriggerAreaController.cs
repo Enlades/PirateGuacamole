@@ -14,7 +14,7 @@ public class TriggerAreaController : MonoBehaviour {
 
     public Equipment.EquipmentType TroubleRequsiteSet;
 
-    private GameObject _brokenDeckPart;
+    public GameObject BrokenDeckPart;
 
     private GameObject _lightning;
 
@@ -74,8 +74,8 @@ public class TriggerAreaController : MonoBehaviour {
         //GetComponent<Renderer>().enabled = false;
         _collider.enabled = false;
 
-        if (_brokenDeckPart != null)
-            Destroy(_brokenDeckPart);
+        if (BrokenDeckPart != null)
+            Destroy(BrokenDeckPart);
 
         StartCoroutine(GenereateTrouble());
     }
@@ -96,8 +96,8 @@ public class TriggerAreaController : MonoBehaviour {
 
         GameManager.SplashPlanks(transform.position);
 
-        _brokenDeckPart = Instantiate(GameManager.BrokenDeckPrefab, transform.position + Vector3.down * 0.4f, Quaternion.identity);
-        _brokenDeckPart.transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
+        BrokenDeckPart = Instantiate(GameManager.BrokenDeckPrefab, transform.position + Vector3.down * 0.4f, Quaternion.identity);
+        BrokenDeckPart.transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 
         ActiveTrouble =
             new Trouble(Mathf.Clamp(GameManager.GameLevel / 2, 1, 10)) {

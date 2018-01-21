@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Xml.Schema;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class CannonBallController : MonoBehaviour, IUsable, ISFX {
     }
 
     public Trouble ActiveTrouble;
+
+    private SquidController _squidController;
 
     public CannonState State {
         get { return _state; }
@@ -35,6 +38,8 @@ public class CannonBallController : MonoBehaviour, IUsable, ISFX {
 
     private void Awake() {
         State = CannonState.Empty;
+
+        _squidController = FindObjectOfType<SquidController>();
     }
 
     public Trouble Use(Action p_CallBack, CharacterController p_User) {
@@ -62,9 +67,17 @@ public class CannonBallController : MonoBehaviour, IUsable, ISFX {
         Destroy(tempPs, 2f);
 
         State = CannonState.Empty;
+
+        StartCoroutine(DelayedHit());
     }
 
     public void PlaySfx() {
         GetComponent<AudioSource>().Play();
+    }
+
+    private IEnumerator DelayedHit() {
+        yield return new WaitForSeconds(0.5f);
+
+        _squidController.Hit();
     }
 }
