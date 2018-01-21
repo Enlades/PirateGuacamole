@@ -62,10 +62,10 @@ public class SeaController : MonoBehaviour {
     }
 
     private void Update() {
-        
+        float time = Time.time;
         for (var i = 0; i < _vertices.Length; i++) {
-            _verticesCur[i].y = (Mathf.Sin(_vertices[i].z * Period + Time.time * Speed) + Mathf.Sin(_vertices[i].z * Period * 0.4f + Time.time * Speed) + Mathf.PerlinNoise(_vertices[i].x + Time.time, _vertices[i].z + Time.time)) * WaveSize;
-            _verticesCur[i].z = _vertices[i].z + Mathf.Sin((_vertices[i].x + Time.time * Gap) * WrinkleFrequency) * WrinkleSize + Mathf.Sin((_vertices[i].z * Mathf.Sin(Time.time) +_vertices[i].x * Mathf.Cos(Time.time)) * Period * 0.4f + Time.time * Speed);
+            _verticesCur[i].y = (Mathf.Sin(_vertices[i].z * Period + time * Speed) + Mathf.Sin(_vertices[i].z * Period * 0.4f + time * Speed) + Mathf.PerlinNoise(_vertices[i].x + time, _vertices[i].z + time)) * WaveSize;
+            _verticesCur[i].z = _vertices[i].z + Mathf.Sin((_vertices[i].x + time * Gap) * WrinkleFrequency) * WrinkleSize + Mathf.Sin((_vertices[i].z * Mathf.Sin(time) +_vertices[i].x * Mathf.Cos(time)) * Period * 0.4f + time * Speed);
         }
 
         _seaMesh.vertices = _verticesCur;
