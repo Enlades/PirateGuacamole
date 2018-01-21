@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-public class TriggerAreaController : MonoBehaviour{
+public class TriggerAreaController : MonoBehaviour {
 
     // TRIGGERED !!!
     public bool Triggered = false;
@@ -16,6 +16,8 @@ public class TriggerAreaController : MonoBehaviour{
 
     private GameObject _lightning;
 
+    private Collider _collider;
+
     // Not used yet, maybe some time.
     private bool _generatingTrouble = false;
 
@@ -24,6 +26,8 @@ public class TriggerAreaController : MonoBehaviour{
         _lightning = transform.GetChild(0).gameObject;
 
         _lightning.SetActive(false);
+
+        _collider = GetComponent<Collider>();
 
         DisableTrigger();
     }
@@ -52,13 +56,13 @@ public class TriggerAreaController : MonoBehaviour{
         GetComponent<MeshRenderer>().material.color = transRed;
 
         //GetComponent<Renderer>().enabled = true;
-        GetComponent<Collider>().enabled = true;
+        _collider.enabled = true;
     }
 
     // This function is called when the trouble is dealt with.
     private void DisableTrigger() {
         //GetComponent<Renderer>().enabled = false;
-        GetComponent<Collider>().enabled = false;
+        _collider.enabled = false;
 
         if (_brokenDeckPart != null)
             Destroy(_brokenDeckPart);
@@ -124,5 +128,11 @@ public class TriggerAreaController : MonoBehaviour{
                 col.GetComponent<CharacterController>().TriggerEvent -= ProgressTrigger;
             }
         }
+    }
+
+    private void Update()
+    {
+        if(_collider.enabled)
+            GameManager.WaterLevel += Time.deltaTime * 0.01f;
     }
 }

@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Helpers;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-
+    public static float WaterLevel;
     // Prefab for FocusArrow, comment for the sake of comment
     public static GameObject FocusArrowPrefab;
     // Prefab for CannonBall
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour {
     public static GameObject PlankPrefab;
 
     public static GameObject BrokenDeckPrefab;
+
+    public ShakyFillBar WaterLevelFillBar;
 
     private void Awake() {
         FocusArrowPrefab = Resources.Load("Prefabs/FocusArrow")as GameObject;
@@ -25,7 +28,7 @@ public class GameManager : MonoBehaviour {
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
+        WaterLevelFillBar.Level = WaterLevel;
     }
 
     // Why not right ?
