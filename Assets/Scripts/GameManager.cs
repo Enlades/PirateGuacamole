@@ -22,8 +22,11 @@ public class GameManager : MonoBehaviour {
     private static float _waterLevel;
 
     public ShakyFillBar WaterLevelFillBar;
+    public ScoreDisplay Score;
 
     public static int GameLevel;
+
+    private float _timer;
 
     private void Awake() {
         FocusArrowPrefab = Resources.Load("Prefabs/FocusArrow")as GameObject;
@@ -31,6 +34,8 @@ public class GameManager : MonoBehaviour {
         CannonBallSmokePSPrefab = Resources.Load("Prefabs/CannonBallSmokePS")as GameObject;
         PlankPrefab = Resources.Load("Prefabs/WoodenPlank")as GameObject;
         BrokenDeckPrefab = Resources.Load("Prefabs/BrokenDeck")as GameObject;
+        FindObjectOfType<SquidController>().HitCallBack += () => Score.Score += 1000;
+        _timer = 0f;
 
         GameLevel = 1;
     }
@@ -41,6 +46,13 @@ public class GameManager : MonoBehaviour {
         WaterLevelFillBar.Level = WaterLevel;
 
         GameLevel = (int)(Time.time / 5f);
+
+        _timer += Time.deltaTime;
+        if (_timer > 1f)
+        {
+            _timer -= 1f;
+            Score.Score += 10;
+        }
     }
 
     // Why not right ?

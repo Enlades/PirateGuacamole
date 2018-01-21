@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SquidController : MonoBehaviour
 {
     public Transform Head;
     public Transform[] Arms;
+
+    public Action HitCallBack;
 
     private Vector3[] _defaultPos;
     private Vector3[] _defaultRots;
@@ -40,5 +44,6 @@ public class SquidController : MonoBehaviour
     {
         Head.DORotate(new Vector3(-45f, 0f, 0f), 0.25f).SetRelative()
             .onComplete = () => Head.DORotate(_headDefaultRot, 0.25f);
+        HitCallBack();
     }
 }
