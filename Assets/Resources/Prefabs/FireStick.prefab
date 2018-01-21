@@ -138,4 +138,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FocusArrow: {fileID: 0}
-  Etype: 1
+  Etype: 2

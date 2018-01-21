@@ -9,7 +9,7 @@ public class CharacterController : MonoBehaviour, IRockable {
     public float MoveSpeed;
 
     // Custom delegate/event couple which is used during trigger stuff.
-    public delegate Trouble TriggerDelegate(Action p_Callback);
+    public delegate Trouble TriggerDelegate(Action p_Callback, Equipment p_UsedEquipment);
     public event TriggerDelegate TriggerEvent;
 
     // Ref to progress bar. Activate Deactivate
@@ -78,7 +78,7 @@ public class CharacterController : MonoBehaviour, IRockable {
 	        Debug.Log("P" + PlayerID + "_Primary Down");
 	    } else if (Input.GetButton("P" + PlayerID + "_Primary")) {
 	        if (TriggerEvent != null) {
-	            Trouble t = TriggerEvent.Invoke(ClearTrigger);
+	            Trouble t = TriggerEvent.Invoke(ClearTrigger, CurrentEq);
 
 	            // Trouble is the class that holds the information for the current action.
 	            // Using progress, scale the progress bar.
@@ -175,7 +175,25 @@ public class CharacterController : MonoBehaviour, IRockable {
             }
         }else if (col.CompareTag("Usable")) {
             if (Input.GetButtonDown("P" + PlayerID + "_Primary")) {
-                col.GetComponent<IUsable>().Use();
+                ProgressBar.SetActive(true);
+
+                ProgressBar.transform.LookAt(Camera.main.transform.position);
+                Vector3 scale = ProgressBar.transform.GetChild(0).localScale;
+                scale.x = 0;
+
+                ProgressBar.transform.GetChild(0).localScale = scale;
+
+                col.GetComponent<IUsable>().Use(ClearTrigger, this);
+            }else if (Input.GetButton("P" + PlayerID + "_Primary")) {
+                Trouble t = col.GetComponent<IUsable>().Use(ClearTrigger, this);
+
+                // Trouble is the class that holds the information for the current action.
+                // Using progress, scale the progress bar.
+                ProgressBar.transform.LookAt(Camera.main.transform.position);
+                Vector3 scale = ProgressBar.transform.GetChild(0).localScale;
+                scale.x = t.Progress / 10f * 42;
+
+                ProgressBar.transform.GetChild(0).localScale = scale;
             }
         }
     }
@@ -192,8 +210,8 @@ public class CharacterController : MonoBehaviour, IRockable {
         cameraRightVector.y = 0;
 
         transform.Translate(cameraRightVector * Time.deltaTime
-                                              * (Camera.main.transform.localEulerAngles.z > 180
-                                                  ? 360 - Camera.main.transform.localEulerAngles.z
-                                                  : Camera.main.transform.localEulerAngles.z) / 50, Space.World);
+                                              * Mathf.Clamp(Camera.main.transform.localEulerAngles.z > 180
+                                                  ? (360 - Camera.main.transform.localEulerAngles.z) * -1
+                                                  : Camera.main.transform.localEulerAngles.z, -10, 10) / 80 * UnityEngine.Random.Range(1f, 10f), Space.World);
     }
 }

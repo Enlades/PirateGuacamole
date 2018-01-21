@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 65540402974027676}
   - component: {fileID: 114325686606979374}
   - component: {fileID: 135131675845445664}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CannonBall
   m_TagString: Equipment
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FocusArrow: {fileID: 0}
-  Etype: 2
+  Etype: 3
 --- !u!135 &135131675845445664
 SphereCollider:
   m_ObjectHideFlags: 1

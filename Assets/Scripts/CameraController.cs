@@ -44,11 +44,11 @@ public class CameraController : MonoBehaviour {
         // These variables are used for roll stuff, rotation around z axis
         // Rolls are like turn based, first clockwise then counter-clockwise
         // If the Camera rotates toom much to either direction, it's corrected.
-        float rollDuration = Random.Range(0.25f, 0.5f);
+        float rollDuration = Random.Range(0.5f, 1f);
         // This one is used in Lerp function
         float rollDurationMax = rollDuration;
         // The random
-        float rollAngle = Random.Range(5f, 15f);
+        float rollAngle = Random.Range(5f, 10f);
         // Direction
         int yawDirection = 1;
 
@@ -87,20 +87,20 @@ public class CameraController : MonoBehaviour {
             else {
                 // Oh boi, here i go random again.
                 yawDirection *= -1;
-                rollDuration = Random.Range(1f, 4f);
+                rollDuration = Random.Range(0.5f, 1f);
                 rollDurationMax = rollDuration;
-                rollAngle = Random.Range(15f, 30f);
+                rollAngle = Random.Range(5f, 10f);
 
                 // Correction part for over-rotation. Since the localEulerAngles has a range of 0-360, unlike the editor which has -inf,+inf
                 // I had to use some wierd voodoo stuff to understand to which direction we overshoot.
                 if (_invisCameraGo.transform.localEulerAngles.z < 330 && _invisCameraGo.transform.localEulerAngles.z > 270) {
                     yawDirection = 1;
-                    rollAngle = 30f;
-                    rollDuration = 1f;
+                    rollAngle = 20f;
+                    rollDuration = 0.5f;
                 } else if (_invisCameraGo.transform.localEulerAngles.z > 30 && _invisCameraGo.transform.localEulerAngles.z < 90) {
                     yawDirection = -1;
-                    rollAngle = 30f;
-                    rollDuration = 1f;
+                    rollAngle = 20f;
+                    rollDuration = 0.5f;
                 }
 
                 // Ready, set, go.

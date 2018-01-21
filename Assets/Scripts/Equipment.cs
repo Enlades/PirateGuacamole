@@ -4,6 +4,7 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
 
     // To be used in future
     public enum EquipmentType {
+        Nill,
         Hammer,
         FireStick,
         CannonBall
@@ -15,13 +16,16 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
 
     public EquipmentType Etype;
 
+    private bool _dontRock;
+
     private void Awake() {
         FocusArrow = Instantiate(GameManager.FocusArrowPrefab, transform.position, Quaternion.identity);
         FocusArrow.SetActive(false);
     }
 
     private void Update() {
-        Rock();
+        if (!_dontRock)
+            Rock();
     }
 
     // Makes the Focus Arrow visible
@@ -45,6 +49,7 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
 
     // Picks up the equipment, basically the reference is passed to the CharacterController
     public Equipment PickUp(CharacterController p_Owner) {
+        _dontRock = true;
         transform.position = p_Owner.transform.position + Vector3.up / 2;
         transform.SetParent(p_Owner.transform);
         GetComponent<Rigidbody>().isKinematic = true;
@@ -63,6 +68,7 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
 
     // Drops the equipment
     public void Drop() {
+        _dontRock = false;
         transform.position = transform.parent.position + transform.parent.forward * 0.5f;
         transform.SetParent(null);
 
@@ -79,8 +85,8 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
         cameraRightVector.y = 0;
 
         transform.Translate(cameraRightVector * Time.deltaTime
-                                              * (Camera.main.transform.localEulerAngles.z > 180
-                                                  ? 360 - Camera.main.transform.localEulerAngles.z
-                                                  : Camera.main.transform.localEulerAngles.z) / 50, Space.World);
+                                              * Mathf.Clamp(Camera.main.transform.localEulerAngles.z > 180
+                                                  ? (360 - Camera.main.transform.localEulerAngles.z) * -1
+                                                  : Camera.main.transform.localEulerAngles.z, -10, 10) / 80 * Random.Range(1f, 10f), Space.World);
     }
 }

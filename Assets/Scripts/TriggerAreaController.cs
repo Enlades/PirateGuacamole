@@ -10,6 +10,8 @@ public class TriggerAreaController : MonoBehaviour{
     // Trouble is the class that's holding the information for the mini-game.
     public Trouble ActiveTrouble = null;
 
+    public Equipment.EquipmentType TroubleRequsiteSet;
+
     // Not used yet, maybe some time.
     private bool _generatingTrouble = false;
 
@@ -20,13 +22,18 @@ public class TriggerAreaController : MonoBehaviour{
     }
 
     // Function is called from player while the player holds the primary button.
-    private Trouble ProgressTrigger(Action p_Callback) {
+    private Trouble ProgressTrigger(Action p_Callback, Equipment p_UsedEquipment) {
         Color transGreen = Color.green;
         transGreen.a = 0.2f;
         GetComponent<MeshRenderer>().material.color = transGreen;
 
         // Progress is made in Trouble class.
-        ActiveTrouble.Deal(p_Callback);
+        if (p_UsedEquipment != null) {
+            ActiveTrouble.Deal(p_Callback, p_UsedEquipment.Etype);
+        }
+        else {
+            ActiveTrouble.Deal(p_Callback, Equipment.EquipmentType.Nill);
+        }
 
         return ActiveTrouble;
     }
@@ -57,7 +64,10 @@ public class TriggerAreaController : MonoBehaviour{
 
         EnableTrigger();
 
-        ActiveTrouble = new Trouble((int)UnityEngine.Random.Range(1, Mathf.Clamp(Time.time / 10, 1, 10)));
+        ActiveTrouble =
+            new Trouble((int) UnityEngine.Random.Range(1, Mathf.Clamp(Time.time / 10, 1, 10))) {
+                Requisite = TroubleRequsiteSet
+            };
 
         ActiveTrouble.FinishEvent += DisableTrigger;
 
