@@ -41,15 +41,13 @@ public class Trouble {
     }
 
     public static Trouble GetReloadTrouble() {
-        Trouble t = new Trouble(1);
-        t.Requisite = Equipment.EquipmentType.CannonBall;
+        Trouble t = new Trouble(1) {Requisite = Equipment.EquipmentType.CannonBall};
 
         return t;
     }
 
     public static Trouble GetFireTrouble() {
-        Trouble t = new Trouble(1);
-        t.Requisite = Equipment.EquipmentType.FireStick;
+        Trouble t = new Trouble(1) {Requisite = Equipment.EquipmentType.Nill};
 
         return t;
     }

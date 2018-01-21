@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
+public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable, ISFX {
 
     // To be used in future
     public enum EquipmentType {
@@ -63,6 +63,8 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
 
         DeactivateFocus();
 
+        PlaySfx();
+
         return this;
     }
 
@@ -88,5 +90,9 @@ public class Equipment : MonoBehaviour, IFocusable, IPickable, IRockable {
                                               * Mathf.Clamp(Camera.main.transform.localEulerAngles.z > 180
                                                   ? (360 - Camera.main.transform.localEulerAngles.z) * -1
                                                   : Camera.main.transform.localEulerAngles.z, -10, 10) / 80 * Random.Range(1f, 10f), Space.World);
+    }
+
+    public void PlaySfx() {
+        GetComponent<AudioSource>().Play();
     }
 }

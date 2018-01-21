@@ -2,7 +2,7 @@
 using System.Xml.Schema;
 using UnityEngine;
 
-public class CannonBallController : MonoBehaviour, IUsable {
+public class CannonBallController : MonoBehaviour, IUsable, ISFX {
 
     public enum CannonState {
         nill,
@@ -38,8 +38,12 @@ public class CannonBallController : MonoBehaviour, IUsable {
     }
 
     public Trouble Use(Action p_CallBack, CharacterController p_User) {
-        if (p_User.CurrentEq != null)
+        if (p_User.CurrentEq != null) {
             ActiveTrouble.Deal(p_CallBack, p_User.CurrentEq.Etype);
+        }
+        else if (ActiveTrouble.Requisite == Equipment.EquipmentType.Nill) {
+            ActiveTrouble.Deal(p_CallBack, Equipment.EquipmentType.Nill);
+        }
 
         return ActiveTrouble;
     }
@@ -53,8 +57,14 @@ public class CannonBallController : MonoBehaviour, IUsable {
         GameObject tempPs = Instantiate(GameManager.CannonBallSmokePSPrefab, transform.GetChild(0).position,
             Quaternion.identity);
 
+        PlaySfx();
+
         Destroy(tempPs, 2f);
 
         State = CannonState.Empty;
+    }
+
+    public void PlaySfx() {
+        GetComponent<AudioSource>().Play();
     }
 }

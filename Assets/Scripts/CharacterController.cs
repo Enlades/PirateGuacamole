@@ -137,6 +137,11 @@ public class CharacterController : MonoBehaviour, IRockable {
     private void ClearTrigger() {
         ProgressBar.SetActive(false);
         TriggerEvent = null;
+
+        if (CurrentEq != null && CurrentEq.Etype == Equipment.EquipmentType.CannonBall) {
+            Destroy(CurrentEq.gameObject);
+            CurrentEq = null;
+        }
     }
 
     // Used for Equipment Focus Arrow activation.
