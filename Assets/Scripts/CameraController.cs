@@ -1,18 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CameraController : MonoBehaviour {
 
     // Array of players which is being used for Camera LookAt()
-    private GameObject[] _Players;
+    private GameObject[] _players;
 
     // The GameObject which actually LooksAt() the center point of players
     // The Camera Lerps it's rotation to this gameObject
     // The position of this gameObject is updated to the Camera's in Update()
     private GameObject _invisCameraGo;
 
+    [Range(-1f,1f)]
+    public float CameraRollStrength;
+    [Range(-1f, 1f)]
+    public float CameraZoomStrength;
+    public float MaxStrength = 4;
+
     private void Awake() {
-        _Players = GameObject.FindGameObjectsWithTag("Player");
+        _players = GameObject.FindGameObjectsWithTag("Player");
 
         _invisCameraGo = new GameObject("Camera_InvisCenter");
         _invisCameraGo.transform.position = transform.position;
@@ -24,11 +32,11 @@ public class CameraController : MonoBehaviour {
         Vector3 _centerPos = Vector3.zero;
 
         // CALCULATE IT
-        for (int i = 0; i < _Players.Length; i++) {
-            _centerPos += _Players[i].transform.position;
+        for (int i = 0; i < _players.Length; i++) {
+            _centerPos += _players[i].transform.position;
         }
 
-        _centerPos /= _Players.Length;
+        _centerPos /= _players.Length;
 
         // Smoothness overload
         _invisCameraGo.transform.rotation = Quaternion.LookRotation(_centerPos - _invisCameraGo.transform.position, _invisCameraGo.transform.up);
@@ -48,7 +56,7 @@ public class CameraController : MonoBehaviour {
         // This one is used in Lerp function
         float rollDurationMax = rollDuration;
         // The random
-        float rollAngle = Random.Range(5f, 10f);
+        float rollAngle = Random.Range(5f, 10f) * GetRollAmplify();
         // Direction
         int yawDirection = 1;
 
@@ -59,7 +67,7 @@ public class CameraController : MonoBehaviour {
         // Used in Lerp function
         float zoomDurationMax = zoomDuration;
         // THE RANDOM
-        float zoomAmount = Random.Range(0.1f, 0.3f);
+        float zoomAmount = Random.Range(0.1f, 0.3f) * GetZoomAplify();
         // Onward stallion
         int zoomDirection = 1;
 
@@ -89,7 +97,7 @@ public class CameraController : MonoBehaviour {
                 yawDirection *= -1;
                 rollDuration = Random.Range(0.5f, 1f);
                 rollDurationMax = rollDuration;
-                rollAngle = Random.Range(5f, 10f);
+                rollAngle = Random.Range(5f, 10f) * GetRollAmplify();
 
                 // Correction part for over-rotation. Since the localEulerAngles has a range of 0-360, unlike the editor which has -inf,+inf
                 // I had to use some wierd voodoo stuff to understand to which direction we overshoot.
@@ -121,7 +129,7 @@ public class CameraController : MonoBehaviour {
                 zoomDirection *= -1;
                 zoomDuration = Random.Range(2f, 4f);
                 zoomDurationMax = rollDuration;
-                zoomAmount = Random.Range(0.1f, 0.3f);
+                zoomAmount = Random.Range(0.1f, 0.3f) * GetZoomAplify();
 
                 if (Vector3.Distance(firstStartPosition, _invisCameraGo.transform.position) > 5f) {
                     if ((_invisCameraGo.transform.position - firstStartPosition).z > 0) {
@@ -143,6 +151,23 @@ public class CameraController : MonoBehaviour {
 
             // F U
             yield return null;
+        }
+    }
+
+    private float GetRollAmplify() {
+        if (Math.Abs(CameraRollStrength) < 0.01f) {
+            return 1;
+        }
+        else {
+            return MaxStrength * (CameraRollStrength > 0 ? CameraRollStrength : 1 / CameraRollStrength);
+        }
+    }
+
+    private float GetZoomAplify() {
+        if (Math.Abs(CameraZoomStrength) < 0.01f) {
+            return 1;
+        } else {
+            return MaxStrength * CameraZoomStrength;
         }
     }
 }
