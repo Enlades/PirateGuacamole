@@ -2,15 +2,18 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class SquidAnimator : MonoBehaviour
+public class SquidController : MonoBehaviour
 {
+    public Transform Head;
     public Transform[] Arms;
 
     private Vector3[] _defaultPos;
     private Vector3[] _defaultRots;
+    private Vector3 _headDefaultRot;
 
     private void Start()
     {
+        _headDefaultRot = Head.eulerAngles;
         _defaultPos = Arms.Select(x => x.position).ToArray();
         _defaultRots = Arms.Select(x => x.eulerAngles).ToArray();
         DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
@@ -31,5 +34,11 @@ public class SquidAnimator : MonoBehaviour
         Arms[i].DORotate(_defaultRots[i], 0.45f);
         Arms[i].DOMove(_defaultPos[i], 0.5f).SetEase(Ease.InOutSine)
             .onComplete = () => Flail(i);
+    }
+
+    public void Hit()
+    {
+        Head.DORotate(new Vector3(-45f, 0f, 0f), 0.25f).SetRelative()
+            .onComplete = () => Head.DORotate(_headDefaultRot, 0.25f);
     }
 }
