@@ -190,8 +190,20 @@ public class CharacterController : MonoBehaviour, IRockable {
                 // Trouble is the class that holds the information for the current action.
                 // Using progress, scale the progress bar.
                 ProgressBar.transform.LookAt(Camera.main.transform.position);
+
                 Vector3 scale = ProgressBar.transform.GetChild(0).localScale;
-                scale.x = t.Progress / 10f * 42;
+
+                if (t != null) {
+                    scale.x = t.Progress / 10f * 42;
+                }
+                else {
+                    scale.x += Time.deltaTime;
+
+                    if (scale.x > 42) {
+                        scale.x = 0;
+                    }
+                }
+                
 
                 ProgressBar.transform.GetChild(0).localScale = scale;
             }

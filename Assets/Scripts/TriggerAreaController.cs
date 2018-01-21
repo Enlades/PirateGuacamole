@@ -7,6 +7,8 @@ public class TriggerAreaController : MonoBehaviour {
     // TRIGGERED !!!
     public bool Triggered = false;
 
+    public bool Started;
+
     // Trouble is the class that's holding the information for the mini-game.
     public Trouble ActiveTrouble = null;
 
@@ -29,7 +31,14 @@ public class TriggerAreaController : MonoBehaviour {
 
         _collider = GetComponent<Collider>();
 
-        DisableTrigger();
+        _collider.enabled = false;
+
+        Started = false;
+    }
+
+    public void StartTrigger() {
+        if (!Started)
+            DisableTrigger();
     }
 
     // Function is called from player while the player holds the primary button.
@@ -61,6 +70,7 @@ public class TriggerAreaController : MonoBehaviour {
 
     // This function is called when the trouble is dealt with.
     private void DisableTrigger() {
+        Started = true;
         //GetComponent<Renderer>().enabled = false;
         _collider.enabled = false;
 
@@ -74,7 +84,7 @@ public class TriggerAreaController : MonoBehaviour {
     private IEnumerator GenereateTrouble() {
         _generatingTrouble = true;
 
-        float randomWait = UnityEngine.Random.Range(1f, 2f);
+        float randomWait = UnityEngine.Random.Range(5f, 10f);
 
         yield return new WaitForSeconds(randomWait - 0.7f);
 
@@ -90,7 +100,7 @@ public class TriggerAreaController : MonoBehaviour {
         _brokenDeckPart.transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 
         ActiveTrouble =
-            new Trouble((int) UnityEngine.Random.Range(1, Mathf.Clamp(Time.time / 10, 1, 10))) {
+            new Trouble(Mathf.Clamp(GameManager.GameLevel / 2, 1, 10)) {
                 Requisite = TroubleRequsiteSet
             };
 

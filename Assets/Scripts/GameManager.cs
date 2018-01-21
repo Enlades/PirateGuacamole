@@ -17,18 +17,24 @@ public class GameManager : MonoBehaviour {
 
     public ShakyFillBar WaterLevelFillBar;
 
+    public static int GameLevel;
+
     private void Awake() {
         FocusArrowPrefab = Resources.Load("Prefabs/FocusArrow")as GameObject;
         CannonBallPrefab = Resources.Load("Prefabs/CannonBall")as GameObject;
         CannonBallSmokePSPrefab = Resources.Load("Prefabs/CannonBallSmokePS")as GameObject;
         PlankPrefab = Resources.Load("Prefabs/WoodenPlank")as GameObject;
         BrokenDeckPrefab = Resources.Load("Prefabs/BrokenDeck")as GameObject;
+
+        GameLevel = 1;
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         WaterLevelFillBar.Level = WaterLevel;
+
+        GameLevel = (int)(Time.time / 5f);
     }
 
     // Why not right ?
