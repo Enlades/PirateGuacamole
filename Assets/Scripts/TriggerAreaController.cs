@@ -12,13 +12,20 @@ public class TriggerAreaController : MonoBehaviour{
 
     public Equipment.EquipmentType TroubleRequsiteSet;
 
+    private GameObject _brokenDeckPart;
+
+    private GameObject _lightning;
+
     // Not used yet, maybe some time.
     private bool _generatingTrouble = false;
 
     private void Awake() {
-        DisableTrigger();
 
-        StartCoroutine(GenereateTrouble());
+        _lightning = transform.GetChild(0).gameObject;
+
+        _lightning.SetActive(false);
+
+        DisableTrigger();
     }
 
     // Function is called from player while the player holds the primary button.
@@ -44,14 +51,17 @@ public class TriggerAreaController : MonoBehaviour{
         transRed.a = 0.2f;
         GetComponent<MeshRenderer>().material.color = transRed;
 
-        GetComponent<Renderer>().enabled = true;
+        //GetComponent<Renderer>().enabled = true;
         GetComponent<Collider>().enabled = true;
     }
 
     // This function is called when the trouble is dealt with.
     private void DisableTrigger() {
-        GetComponent<Renderer>().enabled = false;
+        //GetComponent<Renderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
+
+        if (_brokenDeckPart != null)
+            Destroy(_brokenDeckPart);
 
         StartCoroutine(GenereateTrouble());
     }
@@ -60,9 +70,20 @@ public class TriggerAreaController : MonoBehaviour{
     private IEnumerator GenereateTrouble() {
         _generatingTrouble = true;
 
-        yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 2f));
+        float randomWait = UnityEngine.Random.Range(1f, 2f);
+
+        yield return new WaitForSeconds(randomWait - 0.7f);
+
+        _lightning.SetActive(true);
+
+        yield return new WaitForSeconds(0.7f);
 
         EnableTrigger();
+
+        GameManager.SplashPlanks(transform.position);
+
+        _brokenDeckPart = Instantiate(GameManager.BrokenDeckPrefab, transform.position + Vector3.down * 0.4f, Quaternion.identity);
+        _brokenDeckPart.transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 
         ActiveTrouble =
             new Trouble((int) UnityEngine.Random.Range(1, Mathf.Clamp(Time.time / 10, 1, 10))) {
@@ -72,6 +93,8 @@ public class TriggerAreaController : MonoBehaviour{
         ActiveTrouble.FinishEvent += DisableTrigger;
 
         _generatingTrouble = false;
+
+        _lightning.SetActive(false);
     }
 
     // Enter me senpai

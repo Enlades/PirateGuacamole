@@ -12,11 +12,14 @@ public class GameManager : MonoBehaviour {
 
     public static GameObject PlankPrefab;
 
+    public static GameObject BrokenDeckPrefab;
+
     private void Awake() {
         FocusArrowPrefab = Resources.Load("Prefabs/FocusArrow")as GameObject;
         CannonBallPrefab = Resources.Load("Prefabs/CannonBall")as GameObject;
         CannonBallSmokePSPrefab = Resources.Load("Prefabs/CannonBallSmokePS")as GameObject;
         PlankPrefab = Resources.Load("Prefabs/WoodenPlank")as GameObject;
+        BrokenDeckPrefab = Resources.Load("Prefabs/BrokenDeck")as GameObject;
     }
 
     private void Update() {
@@ -31,7 +34,7 @@ public class GameManager : MonoBehaviour {
         GUILayout.Label("P2: Up Left Down Right :: Keypad Enter");
     }
 
-    private void SplashPlanks(Vector3 p_Position) {
+    public static void SplashPlanks(Vector3 p_Position) {
         int amount = Random.Range(3, 7);
 
         for (int i = 0; i < amount; i++) {
